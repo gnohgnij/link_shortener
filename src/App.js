@@ -11,9 +11,7 @@ function App() {
   };
 
   const [newUrl, setNewUrl] = useState("");
-
   const [helperText, setHelperText] = useState("");
-
   const [isLoaded, setIsLoaded] = useState(true);
 
   const handleFormSubmit = async (event) => {
@@ -21,13 +19,14 @@ function App() {
 
     try {
       setIsLoaded(false);
-      let res = await fetch("https://shawwty.herokuapp.com/api/url/shorten", {
+      let res = await fetch("http://localhost:3306/api/url/shorten", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           originalURL: url,
+          threshold: threshold,
         }),
       });
 
@@ -46,6 +45,11 @@ function App() {
     }
   };
 
+  const [threshold, setThreshold] = useState(0);
+  const handleThresholdChange = (event) => {
+    setThreshold(event.target.value);
+  };
+
   return (
     <>
       <div className="App">
@@ -61,6 +65,18 @@ function App() {
             helperText={helperText}
             error={helperText !== "" ? true : false}
             required
+          />
+          <TextField
+            id="outlined-basic"
+            label="Enter your threshold value"
+            variant="outlined"
+            fullWidth
+            value={threshold}
+            onChange={handleThresholdChange}
+            helperText={helperText}
+            error={helperText !== "" ? true : false}
+            required
+            sx={{ mt: "1rem" }}
           />
           <div className="center mt-1rem">
             <Button variant="contained" type="submit">
